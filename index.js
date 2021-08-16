@@ -90,16 +90,19 @@ Use the finalScore function below to do the following:
 
 function finalScore(inningcb, number){
   const lastInning = [];
-  const inningScore = {
-    Home : inningcb(),
-    Away : inningcb()
+  function inningScore(inningcb) {
+    return{
+      "Home" : inningcb(),
+      "Away" : inningcb()
+    }
   };
   let homeScore = 0;
   let awayScore = 0;
   for(let i = 0; i < number; i++){
-    homeScore = homeScore + inningScore.Home;
-    awayScore = awayScore + inningScore.Away;
-    lastInning.push(`"Home" : ${homeScore}, "Away" : ${awayScore}`);
+    const currentScore = inningScore(inningcb);
+    homeScore = homeScore + currentScore.Home;
+    awayScore = awayScore + currentScore.Away;
+    lastInning.push({"Home" : homeScore, "Away" : awayScore});
   }
   return lastInning[number - 1];
 }
@@ -160,11 +163,27 @@ Use the scoreboard function below to do the following:
 ]  
   */
 
-function scoreboard(/* CODE HERE */) {
-  /* CODE HERE */
+function scoreboard(inningcb, getInningScorecb, inningsNum) {
+  const totalGameScores = [];
+  const scoreByInning = [];
+  let homeScore = 0;
+  let awayScore = 0;
+  for(let i = 0; i < inningsNum; i++){
+    const currentScore = getInningScorecb(inningcb);
+    homeScore = homeScore + currentScore.Home;
+    awayScore = awayScore + currentScore.Away;
+    totalGameScores.push(`Inning ${i + 1}: Away ${currentScore.Away} - Home ${currentScore.Home}`);
+    scoreByInning.push({"Home" : homeScore, "Away" : awayScore});
+  }
+  if(scoreByInning[inningsNum - 1].Home > scoreByInning[inningsNum - 1].Away || scoreByInning[inningsNum - 1].Home < scoreByInning[inningsNum - 1].Away){
+    totalGameScores.push(`Final Score: Away ${scoreByInning[inningsNum - 1].Away} - Home ${scoreByInning[inningsNum - 1].Home}`)
+  }else if(scoreByInning[inningsNum - 1].Home === scoreByInning[inningsNum - 1].Away){
+    totalGameScores.push(`This game will require extra innings: Away ${scoreByInning[inningsNum - 1].Away} - Home ${scoreByInning[inningsNum - 1].Home}`)
+  }
+  return totalGameScores;
 }
 
-
+console.log(scoreboard(inning, getInningScore, 9));
 
 
 /* 🛑🛑🛑🛑🛑 Please do not modify anything below this line 🛑🛑🛑🛑🛑 */
